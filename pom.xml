@@ -127,6 +127,12 @@
             <version>${ktor_version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>io.ktor</groupId>
+            <artifactId>ktor-client-apache</artifactId>
+            <version>${ktor_version}</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
     <build>
         <sourceDirectory>${project.basedir}/src</sourceDirectory>
