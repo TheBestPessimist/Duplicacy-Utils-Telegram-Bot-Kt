@@ -1,23 +1,38 @@
 package tbp.land
 
-import io.ktor.application.*
-import io.ktor.response.*
-import io.ktor.request.*
-import io.ktor.client.*
-import io.ktor.client.features.json.*
-import io.ktor.client.request.*
-import kotlinx.coroutines.*
-import io.ktor.client.features.logging.*
+import com.fasterxml.jackson.databind.SerializationFeature
+import io.ktor.application.Application
+import io.ktor.application.call
+import io.ktor.application.install
+import io.ktor.client.HttpClient
 import io.ktor.client.features.UserAgent
-import io.ktor.client.features.BrowserUserAgent
-import io.ktor.routing.*
-import io.ktor.http.*
-import com.fasterxml.jackson.databind.*
-import io.ktor.jackson.*
+import io.ktor.client.features.json.GsonSerializer
+import io.ktor.client.features.json.JsonFeature
+import io.ktor.client.features.logging.LogLevel
+import io.ktor.client.features.logging.Logging
+import io.ktor.client.request.post
+import io.ktor.client.request.url
 import io.ktor.features.*
-import org.slf4j.event.*
+import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.contentType
+import io.ktor.jackson.jackson
+import io.ktor.request.path
+import io.ktor.response.respond
+import io.ktor.response.respondText
+import io.ktor.routing.get
+import io.ktor.routing.routing
+import kotlinx.coroutines.runBlocking
+import org.slf4j.event.Level
+import tbp.land.telegram.TELEGRAM_API_TOKEN
 
-fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
+fun main(args: Array<String>): Unit {
+//    io.ktor.server.netty.EngineMain.main(args)
+
+
+    TelegramBotClient(TELEGRAM_API_TOKEN).getBotInfo()
+
+}
 
 @Suppress("unused") // Referenced in application.conf
 @kotlin.jvm.JvmOverloads
@@ -27,20 +42,18 @@ fun Application.module(testing: Boolean = false) {
             serializer = GsonSerializer()
         }
         install(Logging) {
-            level = LogLevel.HEADERS
+            level = LogLevel.ALL
         }
-        BrowserUserAgent() // install default browser-like user-agent
-        // install(UserAgent) { agent = "some user agent" }
+//        BrowserUserAgent() // install default browser-like user-agent
+        install(UserAgent) { this.agent = "some user agent" }
     }
     runBlocking {
         // Sample for making a HTTP Client request
-        /*
         val message = client.post<JsonSampleClass> {
             url("http://127.0.0.1:8080/path/to/endpoint")
             contentType(ContentType.Application.Json)
             body = JsonSampleClass(hello = "world")
         }
-        */
     }
 
     install(ContentNegotiation) {
@@ -70,8 +83,8 @@ fun Application.module(testing: Boolean = false) {
         header("X-Engine", "Ktor") // will send this header with each response
     }
 
-    install(ForwardedHeaderSupport) // WARNING: for security, do not include this if not behind a reverse proxy
-    install(XForwardedHeaderSupport) // WARNING: for security, do not include this if not behind a reverse proxy
+//    install(ForwardedHeaderSupport) // WARNING: for security, do not include this if not behind a reverse proxy
+//    install(XForwardedHeaderSupport) // WARNING: for security, do not include this if not behind a reverse proxy
 
     install(HSTS) {
         includeSubDomains = true
