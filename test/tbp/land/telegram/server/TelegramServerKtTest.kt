@@ -54,14 +54,14 @@ internal class TelegramServerKtTest {
 }
  """
 
-        withTestApplication({ a(testing = true) }) {
-            handleRequest(HttpMethod.Post, TheConfig.TELEGRAM_UPDATE_WEBHOOK_PATH) {
-                this.setBody(a)
-                addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-            }.apply {
-                println("${response.content}")
-            }
-        }
+//        withTestApplication({ a(testing = true) }) {
+//            handleRequest(HttpMethod.Post, TheConfig.TELEGRAM_UPDATE_WEBHOOK_PATH) {
+//                this.setBody(a)
+//                addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+//            }.apply {
+//                println("${response.content}")
+//            }
+//        }
 
     }
 }

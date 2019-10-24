@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import io.ktor.application.Application
+import io.ktor.application.ApplicationCallPipeline
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.AutoHeadResponse
@@ -15,21 +16,37 @@ import io.ktor.http.ContentType
 import io.ktor.jackson.jackson
 import io.ktor.response.respond
 import io.ktor.response.respondText
-import io.ktor.routing.Routing
-import io.ktor.routing.get
-import io.ktor.routing.routing
-import tbp.land.telegram.client.TelegramBotClient
-import tbp.land.telegram.server.telegramPostUpdateWebhookEndpoint
+import io.ktor.routing.*
+import io.ktor.server.engine.embeddedServer
+import io.ktor.server.netty.Netty
+import io.ktor.server.netty.NettyApplicationEngine
+import tbp.land.telegram.Telegram
+import tbp.land.telegram.enlistTelegram
+import java.time.Duration
+import kotlin.system.measureTimeMillis
+
+val telegram = Telegram(TheConfig.TELEGRAM_API_TOKEN, TheConfig.WEBSERVER_ADDRESS)
 
 fun main(args: Array<String>) {
-    io.ktor.server.netty.EngineMain.main(args)
+//    io.ktor.server.netty.EngineMain.main(args)
 
-    val telegramBotClient = TelegramBotClient(TheConfig.TELEGRAM_API_TOKEN)
-    telegramBotClient.setWebhook(TheConfig.WEBSERVER_ADDRESS + TheConfig.TELEGRAM_UPDATE_WEBHOOK_PATH)
 
-//    while (true) {
-//        TelegramBotClient(TheConfig.TELEGRAM_API_TOKEN).getWebhookInfo()
-//        TimeUnit.SECONDS.sleep(10)
+    val embeddedServer: NettyApplicationEngine = embeddedServer(Netty, 13337) {
+//        addARoute(this)
+//        a()
+//        telegramModule()
+        telegram.enlistTelegram(this)
+
+    }
+
+    embeddedServer.start(true)
+}
+
+fun addARoute(application: Application) {
+    application.a()
+
+//    get("/") {
+//        call.respondText("HELLO WORLD!", contentType = ContentType.Text.Plain)
 //    }
 }
 
@@ -93,29 +110,43 @@ fun Application.a(testing: Boolean = false) {
         header("X-Engine", "@TheBestPessimist's Telegram bot with Ktor") // will send this header with each response
     }
 
-//    install(ForwardedHeaderSupport) // WARNING: for security, do not include this if not behind a reverse proxy
-//    install(XForwardedHeaderSupport) // WARNING: for security, do not include this if not behind a reverse proxy
-
-//    install(HSTS) {
-//        includeSubDomains = true
-//    }
 
     routing {
-        rootPath()
 
-        get("/json/jackson") {
+        get("/hello") {
             call.respond(mapOf("hello" to "world"))
         }
 
-
-
-        telegramPostUpdateWebhookEndpoint()
-
+        measureTime {
+            rootPath()
+        }
     }
+
+
+
 }
 
 
-private fun Routing.rootPath() {
+fun Routing.measureTime(routesForMeasurement: Route.() -> Unit): Route {
+    val routeWithTimeMeasuredNode = this.createChild(object : RouteSelector(RouteSelectorEvaluation.qualityConstant) {
+        override fun evaluate(context: RoutingResolveContext, segmentIndex: Int): RouteSelectorEvaluation =
+            RouteSelectorEvaluation.Constant
+    })
+
+
+    routeWithTimeMeasuredNode.intercept(ApplicationCallPipeline.Monitoring) { context ->
+        val millis = measureTimeMillis {
+            proceed()
+        }
+        println("Request duration: ${Duration.ofMillis(millis)}")
+    }
+
+    routesForMeasurement(routeWithTimeMeasuredNode)
+    return routeWithTimeMeasuredNode
+}
+
+
+private fun Route.rootPath() {
     get("/") {
         call.respondText("HELLO WORLD!", contentType = ContentType.Text.Plain)
     }

@@ -17,7 +17,6 @@ data class MessageJson(
         return "MessageJson(messageId=$messageId, date=$date, chat=$chat, text=$text)"
     }
     // var from: User? = null // not needed probably
-
 }
 
 data class ChatJson(val id: Long, val username: String?)

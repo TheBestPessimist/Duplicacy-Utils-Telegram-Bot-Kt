@@ -4,7 +4,6 @@ import java.io.FileInputStream
 import java.util.*
 
 object TheConfig {
-    const val TELEGRAM_UPDATE_WEBHOOK_PATH = "/TELEGRAM_UPDATE_WEBHOOK_PATH"
     lateinit var TELEGRAM_API_TOKEN: String
     lateinit var WEBSERVER_ADDRESS: String
 

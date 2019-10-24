@@ -6,3 +6,4 @@
 *.ipr
 *.iws
 /resources/configuration.properties
+/target/
