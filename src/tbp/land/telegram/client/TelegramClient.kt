@@ -12,8 +12,7 @@ import io.ktor.client.request.post
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import kotlinx.coroutines.runBlocking
-import tbp.land.telegram.client.dto.SendMessageJson
-import tbp.land.telegram.client.dto.UpdateJson
+import tbp.land.telegram.client.dto.JsonSendMessage
 
 
 class TelegramClient(API_TOKEN: String, private val objectMapperSettings: ObjectMapper.() -> Unit) {
@@ -37,28 +36,14 @@ class TelegramClient(API_TOKEN: String, private val objectMapperSettings: Object
         }
     }
 
-    /**
-     * return the exact same message the user sent
-     */
-    suspend fun echo(updateJson: UpdateJson) {
-        val message =
-            SendMessageJson(updateJson.message!!.chat.id, updateJson.message.text ?: "", updateJson.message.messageId)
-
-        println("the message is: $message")
-
-        sendMessage(message)
-    }
-
-    private suspend fun sendMessage(message: SendMessageJson) {
+    suspend fun sendMessage(message: JsonSendMessage) {
         val path = "/sendMessage"
         doJsonRequest(path, message)
     }
 
-    @Suppress("unused")
     suspend fun getWebhookInfo() {
         val path = "/getWebhookInfo"
-        val webhookInfo = doJsonRequest(path)
-        println(webhookInfo)
+        doJsonRequest(path)
     }
 
     internal fun setWebhook(webhookAddress: String) {
@@ -66,24 +51,20 @@ class TelegramClient(API_TOKEN: String, private val objectMapperSettings: Object
             val path = "/setWebhook"
             // the link should be
             // https://api.telegram.org/bot_token/setWebhook?url=https://8db6966b.ngrok.io
-            val response = doJsonRequest("$path?url=$webhookAddress")
-            println(response)
+            doJsonRequest("$path?url=$webhookAddress")
         }
     }
 
-    private suspend fun doJsonRequest(path: String, message: SendMessageJson? = null): String {
-        var response = ""
-        response = runBlocking {
-            val post = client.post<String>(TELEGRAM_API_URL + path) {
-                contentType(ContentType.Application.Json)
-                if (message != null) {
-                    this.body = message
-                    println("doJsonRequest with: $message")
-                }
+    private suspend fun doJsonRequest(path: String, message: JsonSendMessage? = null): String {
+        val response: String = client.post<String>(TELEGRAM_API_URL + path) {
+            contentType(ContentType.Application.Json)
+            if (message != null) {
+                this.body = message
+                println("doJsonRequest $path with: $message")
             }
-            post
         }
-//        println("Request duration: ${Duration.ofMillis(millis)} with response: $response")
+        println("$path: $response")
+
         return response
     }
 }
