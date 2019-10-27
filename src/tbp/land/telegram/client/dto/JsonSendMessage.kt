@@ -9,4 +9,5 @@ data class JsonSendMessage(
     val replyToMessageId: Long?
 ) {
     val parseMode = "HTML"
+    val disableWebPagePreview = true
 }
