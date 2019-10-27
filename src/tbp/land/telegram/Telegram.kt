@@ -17,6 +17,7 @@ import io.ktor.routing.Routing
 import io.ktor.routing.post
 import io.ktor.routing.routing
 import kotlinx.coroutines.runBlocking
+import tbp.land.tbp.land.notification.JsonBackupNotification
 import tbp.land.telegram.Telegram.Companion.TELEGRAM_UPDATE_WEBHOOK_ROUTE
 import tbp.land.telegram.client.TelegramClient
 import tbp.land.telegram.client.dto.JsonSendMessage
@@ -58,7 +59,7 @@ class Telegram constructor(private val botApiToken: String, private val serverAd
 
 fun Telegram.installRoutes(application: Application) {
     fun Routing.handleIncomingUpdateFromTelegram() {
-        post(TELEGRAM_UPDATE_WEBHOOK_ROUTE ) {
+        post(TELEGRAM_UPDATE_WEBHOOK_ROUTE) {
             val update: JsonUpdate = call.receive()
             val response = constructDefaultMessage(update)
             client.sendMessage(response)
@@ -82,6 +83,10 @@ fun Telegram.installRoutes(application: Application) {
     }
 }
 
+suspend fun Telegram.forwardBackupNotification(backupNotification: JsonBackupNotification) {
+    val message = JsonSendMessage(backupNotification.chatId, backupNotification.content)
+    client.sendMessage(message)
+}
 
 private fun constructDefaultMessage(
     update: JsonUpdate

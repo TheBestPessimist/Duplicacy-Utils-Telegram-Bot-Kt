@@ -6,7 +6,7 @@ package tbp.land.telegram.client.dto
 data class JsonSendMessage(
     val chatId: Long,
     val text: String,
-    val replyToMessageId: Long?
+    val replyToMessageId: Long? = null
 ) {
     val parseMode = "HTML"
     val disableWebPagePreview = true
