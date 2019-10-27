@@ -15,8 +15,8 @@ object TheConfig {
         val properties: Properties = Properties().apply {
             FileInputStream("resources/configuration.properties").use { this.load(it) }
         }
-        TELEGRAM_API_TOKEN = properties["telegram_api_token"] as String
-        WEBSERVER_ADDRESS = properties["webserver_address"] as String
+        TELEGRAM_API_TOKEN = (properties["telegram_api_token"] as String).trim()
+        WEBSERVER_ADDRESS = (properties["webserver_address"] as String).trim()
     }
 }
 
