@@ -55,8 +55,7 @@ class Telegram constructor(private val botApiToken: String, private val serverAd
     }
 }
 
-fun Telegram.enlistTelegram(application: Application) {
-
+fun Telegram.installRoutes(application: Application) {
     fun Routing.dummy() {
         get("/t") {
             call.respond("t babyyyy")
@@ -88,6 +87,7 @@ fun Telegram.enlistTelegram(application: Application) {
 
 
     runBlocking {
+        // need this to lazily init the client
         client.getWebhookInfo()
     }
 
