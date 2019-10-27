@@ -14,7 +14,6 @@ import io.ktor.jackson.jackson
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Routing
-import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
 import kotlinx.coroutines.runBlocking
@@ -23,8 +22,7 @@ import tbp.land.telegram.client.TelegramClient
 import tbp.land.telegram.client.dto.UpdateJson
 
 class Telegram constructor(private val botApiToken: String, private val serverAddress: String) {
-
-    val client: TelegramClient by lazyTelegramClientInit()
+    internal val client: TelegramClient by lazyTelegramClientInit()
 
     internal val objectMapperSettings: ObjectMapper.() -> Unit = {
         enable(SerializationFeature.INDENT_OUTPUT)
@@ -39,12 +37,14 @@ class Telegram constructor(private val botApiToken: String, private val serverAd
         enable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE)
     }
 
-
-    companion object {
-        const val TELEGRAM_UPDATE_WEBHOOK_PATH = "/telegram/TELEGRAM_UPDATE_WEBHOOK_PATHsffddda"
+    internal companion object {
+        const val TELEGRAM_UPDATE_WEBHOOK_PATH = "/telegram/TELEGRAM_UPDATE_WEBHOOK_PATH"
     }
 
-
+    /**
+     * There's no benefit in making the client lazy.
+     * I wanted to see how a lazy method looks like since my aim here is to learn Kotlin.
+     */
     private fun lazyTelegramClientInit(): Lazy<TelegramClient> {
         return lazy {
             val a = TelegramClient(botApiToken, objectMapperSettings)
@@ -56,12 +56,6 @@ class Telegram constructor(private val botApiToken: String, private val serverAd
 }
 
 fun Telegram.installRoutes(application: Application) {
-    fun Routing.dummy() {
-        get("/t") {
-            call.respond("t babyyyy")
-        }
-    }
-
     fun Routing.webhookEcho() {
         post(TELEGRAM_UPDATE_WEBHOOK_PATH) {
             val update: UpdateJson = call.receive()
@@ -71,24 +65,18 @@ fun Telegram.installRoutes(application: Application) {
         }
     }
 
-
-
-
     application.apply {
         install(ContentNegotiation) {
             jackson(block = objectMapperSettings)
         }
 
         routing {
-            dummy()
             webhookEcho()
         }
     }
-
 
     runBlocking {
         // need this to lazily init the client
         client.getWebhookInfo()
     }
-
 }
