@@ -2,15 +2,15 @@ package tbp.land.telegram.client.dto
 
 import java.time.ZonedDateTime
 
-data class UpdateJson(
+data class JsonUpdate(
     val updateId: Long,
-    val message: MessageJson?
+    val message: JsonMessage?
 )
 
-data class MessageJson(
+data class JsonMessage(
     val messageId: Long,
     val date: ZonedDateTime,
-    val chat: ChatJson
+    val chat: JsonChat
 ) {
     var text: String? = null
     override fun toString(): String {
@@ -19,4 +19,4 @@ data class MessageJson(
     // var from: User? = null // not needed probably
 }
 
-data class ChatJson(val id: Long, val username: String?)
+data class JsonChat(val id: Long, val username: String?)
