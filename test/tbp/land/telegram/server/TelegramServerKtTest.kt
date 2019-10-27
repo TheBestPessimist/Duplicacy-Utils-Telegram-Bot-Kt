@@ -1,31 +1,21 @@
 package tbp.land.telegram.server
 
-import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpMethod
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.testing.handleRequest
-import io.ktor.server.testing.setBody
-import io.ktor.server.testing.withTestApplication
 import org.intellij.lang.annotations.Language
-import org.junit.Ignore
 import org.junit.Test
-import tbp.land.TheConfig
-import tbp.land.a
 
 internal class TelegramServerKtTest {
 
-    @Test
-    @Ignore
-    fun telegramPostUpdateWebhookEndpoint() {
-
-        withTestApplication({ a(testing = true) }) {
-            handleRequest(HttpMethod.Get, "/").apply {
-                kotlin.test.assertEquals(HttpStatusCode.OK, response.status())
-                kotlin.test.assertEquals("HELLO WORLD!", response.content)
-            }
-        }
-    }
+//    @Test
+//    @Ignore
+//    fun telegramPostUpdateWebhookEndpoint() {
+//
+//        withTestApplication({ a(testing = true) }) {
+//            handleRequest(HttpMethod.Get, "/").apply {
+//                kotlin.test.assertEquals(HttpStatusCode.OK, response.status())
+//                kotlin.test.assertEquals("HELLO WORLD!", response.content)
+//            }
+//        }
+//    }
 
     @Test
     fun anotherTest() {

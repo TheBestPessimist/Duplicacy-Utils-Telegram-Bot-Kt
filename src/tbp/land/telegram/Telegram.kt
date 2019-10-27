@@ -53,7 +53,6 @@ class Telegram constructor(private val botApiToken: String, private val serverAd
             a
         }
     }
-
 }
 
 fun Telegram.enlistTelegram(application: Application) {
