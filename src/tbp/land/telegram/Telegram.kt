@@ -89,7 +89,7 @@ private fun constructDefaultMessage(
     val msg = """
             |This bot is a simple one.
             |
-            |Its purpose is to message you whenever a backup has started or finished as long as you use @TheBestPessimist's <a href='https://github.com/TheBestPessimist/duplicacy-utils/'>duplicacy utils</a>.
+            |Its purpose is to message you whenever a backup has started or finished as long as you use @TheBestPessimist's <a href='https://git.tbp.land/duplicacy-utils/'>duplicacy utils</a>.
             |
             |Here's what you need to paste in the user config:
             |
