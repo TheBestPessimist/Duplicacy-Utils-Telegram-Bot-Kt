@@ -17,9 +17,10 @@ import io.ktor.routing.Routing
 import io.ktor.routing.post
 import io.ktor.routing.routing
 import kotlinx.coroutines.runBlocking
-import tbp.land.telegram.Telegram.Companion.TELEGRAM_UPDATE_WEBHOOK_PATH
+import tbp.land.telegram.Telegram.Companion.TELEGRAM_UPDATE_WEBHOOK_ROUTE
 import tbp.land.telegram.client.TelegramClient
-import tbp.land.telegram.client.dto.UpdateJson
+import tbp.land.telegram.client.dto.JsonSendMessage
+import tbp.land.telegram.client.dto.JsonUpdate
 
 class Telegram constructor(private val botApiToken: String, private val serverAddress: String) {
     internal val client: TelegramClient by lazyTelegramClientInit()
@@ -38,7 +39,7 @@ class Telegram constructor(private val botApiToken: String, private val serverAd
     }
 
     internal companion object {
-        const val TELEGRAM_UPDATE_WEBHOOK_PATH = "/telegram/TELEGRAM_UPDATE_WEBHOOK_PATH"
+        const val TELEGRAM_UPDATE_WEBHOOK_ROUTE = "/telegram/TELEGRAM_UPDATE_WEBHOOK_ROUTE"
     }
 
     /**
@@ -48,7 +49,7 @@ class Telegram constructor(private val botApiToken: String, private val serverAd
     private fun lazyTelegramClientInit(): Lazy<TelegramClient> {
         return lazy {
             val a = TelegramClient(botApiToken, objectMapperSettings)
-            a.setWebhook(serverAddress + TELEGRAM_UPDATE_WEBHOOK_PATH)
+            a.setWebhook(serverAddress + TELEGRAM_UPDATE_WEBHOOK_ROUTE)
             println("in client lazy")
             a
         }
@@ -56,11 +57,11 @@ class Telegram constructor(private val botApiToken: String, private val serverAd
 }
 
 fun Telegram.installRoutes(application: Application) {
-    fun Routing.webhookEcho() {
-        post(TELEGRAM_UPDATE_WEBHOOK_PATH) {
-            val update: UpdateJson = call.receive()
-            println(update)
-            client.echo(update)
+    fun Routing.handleIncomingUpdateFromTelegram() {
+        post(TELEGRAM_UPDATE_WEBHOOK_ROUTE ) {
+            val update: JsonUpdate = call.receive()
+            val response = constructDefaultMessage(update)
+            client.sendMessage(response)
             call.respond(HttpStatusCode.OK)
         }
     }
@@ -71,7 +72,7 @@ fun Telegram.installRoutes(application: Application) {
         }
 
         routing {
-            webhookEcho()
+            handleIncomingUpdateFromTelegram()
         }
     }
 
@@ -79,4 +80,21 @@ fun Telegram.installRoutes(application: Application) {
         // need this to lazily init the client
         client.getWebhookInfo()
     }
+}
+
+
+private fun constructDefaultMessage(
+    update: JsonUpdate
+): JsonSendMessage {
+    val msg = """
+            |This bot is a simple one.
+            |
+            |Its purpose is to message you whenever a backup has started or finished as long as you use @TheBestPessimist's <a href='https://github.com/TheBestPessimist/duplicacy-utils/'>duplicacy utils</a>.
+            |
+            |Here's what you need to paste in the user config:
+            |
+            |<code>${'$'}telegramToken = ${update.message!!.chat.id}</code>
+            """.trimMargin()
+
+    return JsonSendMessage(update.message.chat.id, msg, update.message.messageId)
 }
