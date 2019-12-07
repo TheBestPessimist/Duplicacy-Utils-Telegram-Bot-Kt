@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>tbp.land</groupId>
     <artifactId>Duplicacy-Utils-Telegram-Bot-Kt</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.5-SNAPSHOT</version>
     <name>Duplicacy-Utils-Telegram-Bot-Kt</name>
     <description>Duplicacy-Utils-Telegram-Bot-Kt</description>
     <properties>
@@ -15,7 +15,7 @@
         <jackson_datatype_version>2.9.9</jackson_datatype_version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
-        <main.class>io.ktor.server.netty.EngineMain</main.class>
+<!--        <main.class>io.ktor.server.netty.EngineMain</main.class>-->
     </properties>
     <repositories>
         <repository>
