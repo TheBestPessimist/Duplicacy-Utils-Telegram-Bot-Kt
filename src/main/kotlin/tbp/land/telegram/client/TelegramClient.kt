@@ -61,7 +61,7 @@ class TelegramClient(API_TOKEN: String, private val objectMapperSettings: Object
                         }
                     })
             }
-            println(response)
+            println("webhook response: $response")
         }
     }
 
