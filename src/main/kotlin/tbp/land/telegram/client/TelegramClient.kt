@@ -8,7 +8,6 @@ import io.ktor.client.features.json.JacksonSerializer
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logging
-import io.ktor.client.request.forms.FormPart
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.forms.formData
 import io.ktor.client.request.post
@@ -68,7 +67,7 @@ class TelegramClient(API_TOKEN: String, private val objectMapperSettings: Object
 
 
     private suspend fun doJsonRequest(path: String, message: JsonSendMessage? = null): String {
-        val response: String = client.post<String>(TELEGRAM_API_URL + path) {
+        val response: String = client.post(TELEGRAM_API_URL + path) {
             contentType(ContentType.Application.Json)
             if (message != null) {
                 this.body = message

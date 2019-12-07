@@ -1,4 +1,4 @@
-package tbp.land.tbp.land.notification
+package tbp.land.notification
 
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode

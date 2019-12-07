@@ -1,4 +1,4 @@
-package tbp.land
+package tbp.land.main.kotlin.tbp.land.telegram.server
 
 import kotlin.test.Test
 

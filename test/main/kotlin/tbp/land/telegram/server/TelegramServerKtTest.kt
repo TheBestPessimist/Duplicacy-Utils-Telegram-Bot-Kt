@@ -1,4 +1,4 @@
-package tbp.land.telegram.server
+package tbp.land.main.kotlin.tbp.land.telegram.server
 
 import org.intellij.lang.annotations.Language
 import org.junit.Test

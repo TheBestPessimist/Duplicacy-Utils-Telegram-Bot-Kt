@@ -14,7 +14,7 @@ import io.ktor.routing.Routing
 import io.ktor.routing.post
 import io.ktor.routing.routing
 import kotlinx.coroutines.runBlocking
-import tbp.land.tbp.land.notification.JsonBackupNotification
+import tbp.land.notification.JsonBackupNotification
 import tbp.land.telegram.Telegram.Companion.TELEGRAM_UPDATE_WEBHOOK_ROUTE
 import tbp.land.telegram.client.TelegramClient
 import tbp.land.telegram.client.dto.JsonSendMessage
@@ -52,7 +52,10 @@ class Telegram(
      */
     private fun lazyTelegramClientInit(): Lazy<TelegramClient> {
         return lazy {
-            val c = TelegramClient(botApiToken, objectMapperSettings)
+            val c = TelegramClient(
+                botApiToken,
+                objectMapperSettings
+            )
             c.setWebhook(serverAddress + TELEGRAM_UPDATE_WEBHOOK_ROUTE, readCertificate(certificatePath))
             println("in client lazy")
             c
@@ -93,7 +96,10 @@ fun Telegram.initializeTelegramClient(application: Application) {
 }
 
 suspend fun Telegram.forwardBackupNotification(backupNotification: JsonBackupNotification) {
-    val message = JsonSendMessage(backupNotification.chatId, backupNotification.content)
+    val message = JsonSendMessage(
+        backupNotification.chatId,
+        backupNotification.content
+    )
     client.sendMessage(message)
 }
 
@@ -110,5 +116,9 @@ private fun constructDefaultMessage(
             |<code>${'$'}telegramToken = ${update.message!!.chat.id}</code>
             """.trimMargin()
 
-    return JsonSendMessage(update.message.chat.id, msg, update.message.messageId)
+    return JsonSendMessage(
+        update.message.chat.id,
+        msg,
+        update.message.messageId
+    )
 }
