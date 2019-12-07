@@ -12,7 +12,7 @@ import tbp.land.tbp.land.notification.backupNotificationRoute
 import tbp.land.telegram.Telegram
 import tbp.land.telegram.initializeTelegramClient
 
-val telegram = Telegram(TheConfig.TELEGRAM_API_TOKEN, TheConfig.WEBSERVER_ADDRESS)
+val telegram = Telegram(TelegramConfig.TELEGRAM_API_TOKEN, TelegramConfig.WEBSERVER_ADDRESS, TelegramConfig.CERTIFICATE_PATH)
 
 fun main() {
     val embeddedServer: NettyApplicationEngine = embeddedServer(Netty, 13337) {

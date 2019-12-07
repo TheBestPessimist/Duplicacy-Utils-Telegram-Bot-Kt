@@ -3,7 +3,7 @@ package tbp.land
 import java.io.FileInputStream
 import java.util.*
 
-object TheConfig {
+object TelegramConfig {
 
     lateinit var TELEGRAM_API_TOKEN: String
     lateinit var WEBSERVER_ADDRESS: String
