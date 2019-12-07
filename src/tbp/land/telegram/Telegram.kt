@@ -57,7 +57,7 @@ class Telegram constructor(private val botApiToken: String, private val serverAd
     }
 }
 
-fun Telegram.installRoutes(application: Application) {
+fun Telegram.initializeTelegramClient(application: Application) {
     fun Routing.handleIncomingUpdateFromTelegram() {
         post(TELEGRAM_UPDATE_WEBHOOK_ROUTE) {
             val update: JsonUpdate = call.receive()
@@ -68,10 +68,6 @@ fun Telegram.installRoutes(application: Application) {
     }
 
     application.apply {
-        install(ContentNegotiation) {
-            jackson(block = objectMapperSettings)
-        }
-
         routing {
             handleIncomingUpdateFromTelegram()
         }
