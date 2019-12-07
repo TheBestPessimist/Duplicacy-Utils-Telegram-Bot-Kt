@@ -7,10 +7,7 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import io.ktor.application.Application
 import io.ktor.application.call
-import io.ktor.application.install
-import io.ktor.features.ContentNegotiation
 import io.ktor.http.HttpStatusCode
-import io.ktor.jackson.jackson
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Routing
@@ -22,8 +19,14 @@ import tbp.land.telegram.Telegram.Companion.TELEGRAM_UPDATE_WEBHOOK_ROUTE
 import tbp.land.telegram.client.TelegramClient
 import tbp.land.telegram.client.dto.JsonSendMessage
 import tbp.land.telegram.client.dto.JsonUpdate
+import java.nio.file.Files
+import java.nio.file.Paths
 
-class Telegram constructor(private val botApiToken: String, private val serverAddress: String) {
+class Telegram(
+    private val botApiToken: String,
+    private val serverAddress: String,
+    private val certificatePath: String
+) {
     internal val client: TelegramClient by lazyTelegramClientInit()
 
     internal val objectMapperSettings: ObjectMapper.() -> Unit = {
@@ -49,10 +52,20 @@ class Telegram constructor(private val botApiToken: String, private val serverAd
      */
     private fun lazyTelegramClientInit(): Lazy<TelegramClient> {
         return lazy {
-            val a = TelegramClient(botApiToken, objectMapperSettings)
-            a.setWebhook(serverAddress + TELEGRAM_UPDATE_WEBHOOK_ROUTE)
+            val c = TelegramClient(botApiToken, objectMapperSettings)
+            c.setWebhook(serverAddress + TELEGRAM_UPDATE_WEBHOOK_ROUTE, readCertificate(certificatePath))
             println("in client lazy")
-            a
+            c
+        }
+    }
+
+    private fun readCertificate(stringPath: String): ByteArray? {
+        val path = Paths.get(stringPath)
+
+        return if (Files.exists(path) && Files.isRegularFile(path)) {
+            Files.readAllBytes(path)
+        } else {
+            null
         }
     }
 }

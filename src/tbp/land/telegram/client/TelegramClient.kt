@@ -8,6 +8,9 @@ import io.ktor.client.features.json.JacksonSerializer
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logging
+import io.ktor.client.request.forms.FormPart
+import io.ktor.client.request.forms.MultiPartFormDataContent
+import io.ktor.client.request.forms.formData
 import io.ktor.client.request.post
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
@@ -46,14 +49,23 @@ class TelegramClient(API_TOKEN: String, private val objectMapperSettings: Object
         doJsonRequest(path)
     }
 
-    internal fun setWebhook(webhookAddress: String) {
+    internal fun setWebhook(webhookAddress: String, certificateData: ByteArray?) {
         runBlocking {
             val path = "/setWebhook"
-            // the link should be
-            // https://api.telegram.org/bot_token/setWebhook?url=https://8db6966b.ngrok.io
-            doJsonRequest("$path?url=$webhookAddress")
+
+            val response: String = client.post("$TELEGRAM_API_URL$path") {
+                body = MultiPartFormDataContent(
+                    formData {
+                        this.append("url", webhookAddress)
+                        if (certificateData != null) {
+                            this.append("certificate", certificateData)
+                        }
+                    })
+            }
+            println(response)
         }
     }
+
 
     private suspend fun doJsonRequest(path: String, message: JsonSendMessage? = null): String {
         val response: String = client.post<String>(TELEGRAM_API_URL + path) {
