@@ -1,6 +1,7 @@
 package tbp.land.main.kotlin
 
 import java.io.FileInputStream
+import java.nio.file.Paths
 import java.util.*
 
 object TelegramConfig {
@@ -18,7 +19,9 @@ object TelegramConfig {
 
     private fun readPropertiesFile() {
         properties = Properties().apply {
-            FileInputStream("resources/configuration.properties").use { this.load(it) }
+            val s = "src/main/resources/configuration.properties"
+            println("configuration.properties full path: ${Paths.get(s).toAbsolutePath()}")
+            FileInputStream(s).use { this.load(it) }
         }
     }
 

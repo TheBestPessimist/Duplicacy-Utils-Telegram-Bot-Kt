@@ -1,4 +1,4 @@
-package tbp.land.main.kotlin
+package tbp.land
 
 import io.ktor.application.install
 import io.ktor.features.ContentNegotiation
@@ -7,6 +7,7 @@ import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.server.netty.NettyApplicationEngine
+import tbp.land.main.kotlin.TelegramConfig
 import tbp.land.notification.BACKUP_NOTIFICATION_ROUTE_1
 import tbp.land.notification.backupNotificationRoute
 import tbp.land.telegram.Telegram
