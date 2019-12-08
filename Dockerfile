@@ -7,7 +7,7 @@ FROM gradle:6.0.1-jdk13
 # Ref: https://github.com/drone/ca-certs
 #RUN apk add --no-cache ca-certificates git
 
-RUN apk add --no-cache htop
+#RUN apk add --no-cache htop
 
 WORKDIR /app
 
@@ -19,8 +19,7 @@ RUN gradle shadowJar --no-daemon
 # The port is mandatory for the app
 EXPOSE 13337:13337
 
-# TODO ?!?!?! why does this fail with OOM, when on windows, -Xmx20m is enough to have my simple webserver running?
-CMD ["java", "-server", "-Xmx20m", "-Xshare:off",  "-XshowSettings:vm", "-jar", "/app/build/libs/Duplicacy-Utils-Telegram-Bot.jar"]
+CMD ["java", "-server", "-XX:+ExitOnOutOfMemoryError", "-XX:+TieredCompilation", "-XX:TieredStopAtLevel=1", "-XshowSettings:vm", "-Xmx40m", "-jar", "/app/build/libs/Duplicacy-Utils-Telegram-Bot.jar"]
 
 
 
