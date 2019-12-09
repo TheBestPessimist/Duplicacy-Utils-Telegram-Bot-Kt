@@ -13,7 +13,7 @@ FROM openjdk:12-alpine
 
 # Install the CA certificates for the app to be able to make calls to HTTPS endpoints
 # Ref: https://github.com/drone/ca-certs
-RUN apk add --no-cache ca-certificates git
+RUN apk add --no-cache ca-certificates
 
 # Define the user used in this instance. Prevent using root as even in a container it can be a security risk.
 ENV APPLICATION_USER kotlin
@@ -34,7 +34,5 @@ COPY --from=builder /app/src/main/resources/configuration.properties ./
 
 # The port is mandatory for the app
 EXPOSE 13337
-
-RUN ls -l
 
 CMD ["java", "-server", "-XX:+ExitOnOutOfMemoryError", "-XX:+TieredCompilation", "-XX:TieredStopAtLevel=1", "-XshowSettings:vm", "-Xmx40m", "-jar", "Duplicacy-Utils-Telegram-Bot.jar"]
