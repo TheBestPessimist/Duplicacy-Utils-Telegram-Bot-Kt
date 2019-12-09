@@ -9,6 +9,7 @@ import io.ktor.server.netty.Netty
 import io.ktor.server.netty.NettyApplicationEngine
 import tbp.land.main.kotlin.TelegramConfig
 import tbp.land.notification.BACKUP_NOTIFICATION_ROUTE_1
+import tbp.land.notification.BACKUP_NOTIFICATION_ROUTE_2
 import tbp.land.notification.backupNotificationRoute
 import tbp.land.telegram.Telegram
 import tbp.land.telegram.initializeTelegramClient
@@ -29,6 +30,7 @@ fun main() {
 
         routing {
             backupNotificationRoute(BACKUP_NOTIFICATION_ROUTE_1, telegram)
+            backupNotificationRoute(BACKUP_NOTIFICATION_ROUTE_2, telegram)
         }
     }
 

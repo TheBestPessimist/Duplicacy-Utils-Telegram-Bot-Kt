@@ -11,6 +11,7 @@ import tbp.land.telegram.forwardBackupNotification
 
 
 const val BACKUP_NOTIFICATION_ROUTE_1 = "/v2/userUpdate"
+const val BACKUP_NOTIFICATION_ROUTE_2 = "userUpdate"
 
 fun Routing.backupNotificationRoute(backupNotificationRoute: String, telegram: Telegram) {
     post(backupNotificationRoute) {
