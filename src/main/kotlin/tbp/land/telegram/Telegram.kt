@@ -65,7 +65,7 @@ class Telegram(
     private fun readCertificate(stringPath: String): ByteArray? {
         val path = Paths.get(stringPath)
 
-        return if (Files.exists(path) && Files.isRegularFile(path)) {
+        return if (Files.isRegularFile(path)) {
             Files.readAllBytes(path)
         } else {
             null

@@ -1,6 +1,7 @@
 package tbp.land.main.kotlin
 
 import java.io.FileInputStream
+import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
 
@@ -19,9 +20,22 @@ object TelegramConfig {
 
     private fun readPropertiesFile() {
         properties = Properties().apply {
-            val s = "src/main/resources/configuration.properties"
+            val s = getConfigurationFilePath()
             println("configuration.properties full path: ${Paths.get(s).toAbsolutePath()}")
             FileInputStream(s).use { this.load(it) }
+        }
+    }
+
+    /**
+     * Test if the config file exists at the root of the project (docker) or in the resources folder (ide)
+     */
+    private fun getConfigurationFilePath(): String {
+        val path = "configuration.properties"
+
+        return if (Files.isRegularFile(Paths.get(path))) {
+            path
+        } else {
+            "src/main/resources/configuration.properties"
         }
     }
 
