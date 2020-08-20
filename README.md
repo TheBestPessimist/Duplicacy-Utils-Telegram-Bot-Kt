@@ -1,20 +1,3 @@
-# Duplicacy-Utils-Telegram-Bot-Kt
-Reimplementation of https://github.com/TheBestPessimist/Duplicacy-Utils-Telegram-Bot in Kotlin
-
-
-
-
-
-
-Copy paste from the original implementation.
-
-
-
-
-
-
-
-
 # Duplicacy Utils Telegram Bot
 A telegram bot used by my [duplicacy-utils](https://github.com/TheBestPessimist/duplicacy-utils) scripts.
 
