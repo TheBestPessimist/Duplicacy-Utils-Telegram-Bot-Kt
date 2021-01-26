@@ -49,8 +49,8 @@ dependencies {
 
 }
 
-compileKotlin { kotlinOptions.jvmTarget = "12" }
-compileTestKotlin { kotlinOptions.jvmTarget = "12" }
+compileKotlin { kotlinOptions.jvmTarget = "15" }
+compileTestKotlin { kotlinOptions.jvmTarget = "15" }
 
 kotlin {
 }
