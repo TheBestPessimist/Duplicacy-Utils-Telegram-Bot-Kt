@@ -1,18 +1,14 @@
 package tbp.land.telegram.client
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.apache.Apache
-import io.ktor.client.features.UserAgent
-import io.ktor.client.features.json.JacksonSerializer
-import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.features.logging.LogLevel
-import io.ktor.client.features.logging.Logging
-import io.ktor.client.request.forms.MultiPartFormDataContent
-import io.ktor.client.request.forms.formData
-import io.ktor.client.request.post
-import io.ktor.http.ContentType
-import io.ktor.http.contentType
+import io.ktor.client.*
+import io.ktor.client.engine.apache.*
+import io.ktor.client.features.*
+import io.ktor.client.features.json.*
+import io.ktor.client.features.logging.*
+import io.ktor.client.request.*
+import io.ktor.client.request.forms.*
+import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
 import tbp.land.telegram.client.dto.JsonSendMessage
 
@@ -24,7 +20,7 @@ class TelegramClient(API_TOKEN: String, private val objectMapperSettings: Object
 
     private val client = HttpClient(Apache) {
         install(JsonFeature) {
-            serializer = JacksonSerializer(objectMapperSettings)
+            serializer = JacksonSerializer(block = objectMapperSettings)
         }
 
         install(Logging) {
