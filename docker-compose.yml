@@ -1,0 +1,14 @@
+version: "2.4"
+services:
+  telegram-bot:
+    hostname: telegram-bot
+    image: thebestpessimist/duplicacy-utils-telegram-bot:latest
+    ports:
+      - 13337:13337
+    restart: unless-stopped
+    mem_limit: 80m
+    environment:
+      WEBSERVER_ADDRESS:
+      WEBHOOK_ROUTE:
+      TELEGRAM_API_TOKEN:
+      CERTIFICATE_PATH:
