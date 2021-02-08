@@ -8,3 +8,4 @@
 /resources/configuration.properties
 /target/
 /src/main/resources/configuration.properties
+.env
