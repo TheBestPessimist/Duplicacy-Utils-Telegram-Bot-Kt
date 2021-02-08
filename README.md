@@ -4,7 +4,7 @@ A telegram bot used by my [duplicacy-utils](https://github.com/TheBestPessimist/
 
 # How to use with [duplicacy-utils](https://github.com/TheBestPessimist/duplicacy-utils)?
 
-Update duplicacy-utils to latest version then just follow the instruction from [@DuplicacyUtilsTBPBot](https://t.me/DuplicacyUtilsTBPBot). There's only one step needed :^).
+Update duplicacy-utils to the latest version then just follow the instruction from [@DuplicacyUtilsTBPBot](https://t.me/DuplicacyUtilsTBPBot). There's only one step needed :^).
 
 
 # How to use from other scripts
@@ -23,7 +23,7 @@ The steps needed are as follows:
 $payload = @{
   content = "Write anything <code>>>lalalal &m_a5</code> $#@%&**&^% <i>you</i> may <b>want</b>"
   chat_id = 1234567890
-  }
+}
 
 Invoke-WebRequest `
   -Body (ConvertTo-Json -Compress -InputObject $payload) `
@@ -35,6 +35,3 @@ Invoke-WebRequest `
 # More usage details
 
 More details and screenshots are found on the [Duplicacy Forum](https://forum.duplicacy.com/t/send-backup-notifications-via-telegram-using-duplicacy-utils-telegram-bot/1692)
-
-
-
