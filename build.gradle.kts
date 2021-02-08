@@ -10,6 +10,7 @@ val logbackVersion = "1.2.3"
 
 
 plugins {
+    application
     kotlin("jvm") version "1.4.21"
     id("com.google.cloud.tools.jib") version "2.7.1"
 }
@@ -57,4 +58,34 @@ tasks {
     withType<Test> {
         useJUnitPlatform()
     }
+}
+
+
+jib {
+    from {
+        image = "openjdk:15-alpine"
+    }
+    to {
+        image = "docker.io/thebestpessimist/duplicacy-utils-telegram-bot"
+    }
+    container {
+        this.ports = listOf("13337")
+        jvmFlags = listOf(
+            "-server",
+            "-XX:+UseSerialGC",
+            "-XX:+UseStringDeduplication",
+            "-Xms40m",
+            "-Xmx40m"
+        )
+    }
+}
+
+application {
+    applicationDefaultJvmArgs = listOf(
+        "-server",
+        "-XX:+UseSerialGC",
+        "-XX:+UseStringDeduplication",
+        "-Xms40m",
+        "-Xmx40m"
+    )
 }
