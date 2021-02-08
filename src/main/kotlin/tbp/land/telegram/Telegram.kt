@@ -2,20 +2,16 @@ package tbp.land.telegram
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.PropertyNamingStrategy
+import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import io.ktor.application.Application
-import io.ktor.application.call
-import io.ktor.http.HttpStatusCode
-import io.ktor.request.receive
-import io.ktor.response.respond
-import io.ktor.routing.Routing
-import io.ktor.routing.post
-import io.ktor.routing.routing
+import io.ktor.application.*
+import io.ktor.http.*
+import io.ktor.request.*
+import io.ktor.response.*
+import io.ktor.routing.*
 import kotlinx.coroutines.runBlocking
 import tbp.land.notification.JsonBackupNotification
-import tbp.land.telegram.Telegram.Companion.TELEGRAM_UPDATE_WEBHOOK_ROUTE
 import tbp.land.telegram.client.TelegramClient
 import tbp.land.telegram.client.dto.JsonSendMessage
 import tbp.land.telegram.client.dto.JsonUpdate
@@ -25,6 +21,7 @@ import java.nio.file.Paths
 class Telegram(
     private val botApiToken: String,
     private val serverAddress: String,
+    internal val webhookRoute: String,
     private val certificatePath: String
 ) {
     internal val client: TelegramClient by lazyTelegramClientInit()
@@ -42,10 +39,6 @@ class Telegram(
         enable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE)
     }
 
-    internal companion object {
-        const val TELEGRAM_UPDATE_WEBHOOK_ROUTE = "/telegram/TELEGRAM_UPDATE_WEBHOOK_ROUTE"
-    }
-
     /**
      * There's no benefit in making the client lazy.
      * I wanted to see how a lazy method looks like since my aim here is to learn Kotlin.
@@ -56,7 +49,7 @@ class Telegram(
                 botApiToken,
                 objectMapperSettings
             )
-            c.setWebhook(serverAddress + TELEGRAM_UPDATE_WEBHOOK_ROUTE, readCertificate(certificatePath))
+            c.setWebhook(serverAddress + webhookRoute, readCertificate(certificatePath))
             println("in client lazy")
             c
         }
@@ -75,7 +68,7 @@ class Telegram(
 
 fun Telegram.initializeTelegramClient(application: Application) {
     fun Routing.handleIncomingUpdateFromTelegram() {
-        post(TELEGRAM_UPDATE_WEBHOOK_ROUTE) {
+        post(webhookRoute) {
             val update: JsonUpdate = call.receive()
             val response = constructDefaultMessage(update)
             client.sendMessage(response)
