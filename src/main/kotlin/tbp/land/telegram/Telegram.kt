@@ -28,7 +28,7 @@ class Telegram(
 
     internal val objectMapperSettings: ObjectMapper.() -> Unit = {
         enable(SerializationFeature.INDENT_OUTPUT)
-        propertyNamingStrategy = PropertyNamingStrategy.SNAKE_CASE
+        propertyNamingStrategy = PropertyNamingStrategies.SNAKE_CASE
 
         disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES) // similar to `configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)`
 
