@@ -17,6 +17,10 @@ object Env {
 
     init {
         loadProperties()
+        println("Env: ")
+        env.entries.forEach {
+            println("    ${it.key}: ${it.value}")
+        }
     }
 
     fun get(name: String): String {
