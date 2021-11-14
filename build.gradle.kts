@@ -4,15 +4,15 @@ description = "Telegram Bot used for my Duplicacy Utils scripts"
 java.sourceCompatibility = JavaVersion.VERSION_15
 java.targetCompatibility = JavaVersion.VERSION_15
 
-val ktorVersion = "1.5.1"
-val jacksonVersion = "2.12.1"
-val logbackVersion = "1.2.3"
+val ktorVersion = "1.6.4"
+val jacksonVersion = "2.13.0"
+val logbackVersion = "1.2.6"
 
 
 plugins {
     application
-    kotlin("jvm") version "1.4.21"
-    id("com.google.cloud.tools.jib") version "2.7.1"
+    kotlin("jvm") version "1.5.31"
+    id("com.google.cloud.tools.jib") version "3.1.4"
 }
 
 
@@ -50,8 +50,8 @@ dependencies {
 tasks {
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions {
-            freeCompilerArgs = listOf("-Xjsr305=strict")
-            jvmTarget = JavaVersion.VERSION_15.majorVersion
+            freeCompilerArgs += listOf("-Xjsr305=strict")
+            jvmTarget = JavaVersion.VERSION_16.majorVersion
         }
     }
 
@@ -63,7 +63,7 @@ tasks {
 
 jib {
     from {
-        image = "openjdk:15-alpine"
+        image = "openjdk:16-alpine"
     }
     to {
         image = "docker.io/thebestpessimist/duplicacy-utils-telegram-bot"
