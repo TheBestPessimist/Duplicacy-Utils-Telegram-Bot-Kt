@@ -6,6 +6,7 @@ import io.ktor.jackson.*
 import io.ktor.routing.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import org.slf4j.event.Level
 import tbp.land.notification.BACKUP_NOTIFICATION_ROUTE_1
 import tbp.land.notification.BACKUP_NOTIFICATION_ROUTE_2
 import tbp.land.notification.backupNotificationRoute
@@ -25,6 +26,10 @@ fun main() {
 
         install(ContentNegotiation) {
             jackson(block = telegram.objectMapperSettings)
+        }
+
+        install(CallLogging) {
+            level = Level.TRACE
         }
 
         routing {
