@@ -1,6 +1,6 @@
 val javaVersion = JavaVersion.VERSION_16
 val kotlinLanguageVersion = "1.6"
-val ktorVersion = "1.6.8"
+val ktorVersion = "2.0.0"
 val jacksonVersion = "2.13.2"
 val logbackVersion = "1.2.11"
 
@@ -24,7 +24,7 @@ java.targetCompatibility = javaVersion
 
 plugins {
     application
-    kotlin("jvm") version "1.6.10"
+    kotlin("jvm") version "1.6.20"
     id("com.google.cloud.tools.jib") version "3.2.0"
 }
 
@@ -36,22 +36,28 @@ repositories {
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
-    implementation("io.ktor:ktor-server-netty:$ktorVersion")
-    implementation("io.ktor:ktor-client-core:$ktorVersion")
-    implementation("io.ktor:ktor-client-core-jvm:$ktorVersion")
-    implementation("io.ktor:ktor-client-json-jvm:$ktorVersion")
-    implementation("io.ktor:ktor-client-jackson:$ktorVersion")
-    implementation("io.ktor:ktor-client-logging-jvm:$ktorVersion")
-    implementation("io.ktor:ktor-server-core:$ktorVersion")
-    implementation("io.ktor:ktor-jackson:$ktorVersion")
-    implementation("io.ktor:ktor-metrics:$ktorVersion")
-    implementation("io.ktor:ktor-server-host-common:$ktorVersion")
-    implementation("io.ktor:ktor-client-apache:$ktorVersion")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
 
-    testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
-    testImplementation("io.ktor:ktor-client-mock:$ktorVersion")
-    testImplementation("io.ktor:ktor-client-mock-jvm:$ktorVersion")
+    // ktor server
+    implementation("io.ktor:ktor-server-netty-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-host-common:$ktorVersion")
+    implementation("io.ktor:ktor-server-core-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-metrics-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-call-logging-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
+
+    // ktor client
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-apache:$ktorVersion")
+    implementation("io.ktor:ktor-client-logging:$ktorVersion")
+    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+
+    // ktor common
+    implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
+
+
+
+    testImplementation("io.ktor:ktor-server-tests-jvm:$ktorVersion")
 
     configurations.all {
         exclude(group = "junit", module = "junit")
@@ -65,6 +71,7 @@ dependencies {
 tasks {
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions {
+            @Suppress("SuspiciousCollectionReassignment")
             freeCompilerArgs += listOf("-Xjsr305=strict")
             jvmTarget = javaVersion.majorVersion
             languageVersion = kotlinLanguageVersion
@@ -77,7 +84,7 @@ tasks {
     }
 
     wrapper {
-        gradleVersion = "7.4.1"
+        gradleVersion = "7.4.2"
     }
 }
 

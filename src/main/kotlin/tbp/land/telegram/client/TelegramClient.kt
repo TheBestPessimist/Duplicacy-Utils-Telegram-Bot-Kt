@@ -2,13 +2,15 @@ package tbp.land.telegram.client
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.ktor.client.*
+import io.ktor.client.call.*
 import io.ktor.client.engine.apache.*
-import io.ktor.client.features.*
-import io.ktor.client.features.json.*
-import io.ktor.client.features.logging.*
+import io.ktor.client.plugins.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
+import io.ktor.serialization.jackson.*
 import kotlinx.coroutines.runBlocking
 import tbp.land.telegram.client.dto.JsonSendMessage
 
@@ -19,12 +21,12 @@ class TelegramClient(API_TOKEN: String, private val objectMapperSettings: Object
     private val TELEGRAM_API_URL = "https://api.telegram.org/bot$API_TOKEN"
 
     private val client = HttpClient(Apache) {
-        install(JsonFeature) {
-            serializer = JacksonSerializer(block = objectMapperSettings)
+        install(ContentNegotiation) {
+            jackson(block = objectMapperSettings)
         }
 
         install(Logging) {
-            level = LogLevel.NONE
+            level = LogLevel.ALL
         }
 
         expectSuccess = false
@@ -49,27 +51,29 @@ class TelegramClient(API_TOKEN: String, private val objectMapperSettings: Object
             val path = "/setWebhook"
 
             val response: String = client.post("$TELEGRAM_API_URL$path") {
-                body = MultiPartFormDataContent(
-                    formData {
-                        this.append("url", webhookAddress)
-                        if (certificateData != null) {
-                            this.append("certificate", certificateData)
-                        }
-                    })
-            }
+                setBody(
+                    MultiPartFormDataContent(
+                        formData {
+                            append("url", webhookAddress)
+                            if (certificateData != null) {
+                                append("certificate", certificateData)
+                            }
+                        })
+                )
+            }.body()
             println("webhook response: $response")
         }
     }
 
 
     private suspend fun doJsonRequest(path: String, message: JsonSendMessage? = null): String {
-        val response: String = client.post(TELEGRAM_API_URL + path) {
+        val response = client.post(TELEGRAM_API_URL + path) {
             contentType(ContentType.Application.Json)
             if (message != null) {
-                this.body = message
+                setBody(message)
                 println("doJsonRequest $path with: $message")
             }
-        }
+        }.body<String>()
         println("$path: $response")
 
         return response
