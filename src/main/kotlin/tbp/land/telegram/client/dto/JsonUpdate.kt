@@ -1,9 +1,13 @@
 package tbp.land.telegram.client.dto
 
+import com.fasterxml.jackson.annotation.JsonAlias
+import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.ZonedDateTime
 
 data class JsonUpdate(
     val updateId: Long,
+    @JsonProperty("message")
+    @JsonAlias("channel_post", "edited_channel_post")
     val message: JsonMessage?
 )
 
