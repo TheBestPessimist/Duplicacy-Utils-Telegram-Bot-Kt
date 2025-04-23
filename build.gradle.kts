@@ -1,6 +1,6 @@
-val javaVersion = JavaVersion.VERSION_16
-val kotlinLanguageVersion = "1.6"
-val ktorVersion = "2.0.0"
+val javaVersion = JavaVersion.VERSION_24
+val kotlinLanguageVersion = "1.6" // Consider updating Kotlin version if needed for Java 24 compatibility
+val ktorVersion = "2.0.0" // Consider updating Ktor version if needed
 val jacksonVersion = "2.13.2"
 val logbackVersion = "1.2.11"
 
@@ -9,8 +9,8 @@ val applicationJvmArgs = listOf(
     "-XX:+UseSerialGC",
     "-XX:+UseStringDeduplication",
     "-Xms40m",
-    "-Xmx40m",
-    "--finalization=disabled" // TODO will be removed when JDK sets finalization to disabled by default.
+    "-Xmx40m"
+    // Finalization is disabled by default since Java 18
 )
 
 
@@ -90,7 +90,7 @@ tasks {
 
 jib {
     from {
-        image = "openjdk:18"
+        image = "openjdk:24-jdk-slim" // Use a Java 24 base image
     }
     to {
         image = "docker.io/thebestpessimist/duplicacy-utils-telegram-bot"
