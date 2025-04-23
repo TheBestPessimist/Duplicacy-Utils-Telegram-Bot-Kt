@@ -1,8 +1,8 @@
 val javaVersion = JavaVersion.VERSION_24
-val kotlinLanguageVersion = "1.6" // Consider updating Kotlin version if needed for Java 24 compatibility
-val ktorVersion = "2.0.0" // Consider updating Ktor version if needed
-val jacksonVersion = "2.13.2"
-val logbackVersion = "1.2.11"
+val kotlinLanguageVersion = "2.1" // Updated Kotlin language version
+val ktorVersion = "3.1.2" // Updated Ktor version
+val jacksonVersion = "2.18.3" // Updated Jackson version
+val logbackVersion = "1.5.18" // Updated Logback version
 
 val applicationJvmArgs = listOf(
     "-server",
