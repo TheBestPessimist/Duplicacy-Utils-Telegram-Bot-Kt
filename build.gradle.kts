@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+
 val javaVersion = JavaVersion.VERSION_23
 val kotlinLanguageVersion = "2.1"
 val ktorVersion = "3.1.2"
@@ -69,12 +72,11 @@ dependencies {
 
 tasks {
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions {
-            @Suppress("SuspiciousCollectionReassignment")
-            freeCompilerArgs += listOf("-Xjsr305=strict")
-            jvmTarget = javaVersion.majorVersion
-            languageVersion = kotlinLanguageVersion
-            apiVersion = kotlinLanguageVersion
+        compilerOptions {
+            freeCompilerArgs.addAll(listOf("-Xjsr305=strict"))
+            jvmTarget.set(JvmTarget.fromTarget(javaVersion.majorVersion))
+            languageVersion.set(KotlinVersion.fromVersion(kotlinLanguageVersion))
+            apiVersion.set(KotlinVersion.fromVersion(kotlinLanguageVersion))
         }
     }
 
@@ -89,7 +91,7 @@ tasks {
 
 jib {
     from {
-        image = "openjdk:23-jdk-slim" // Use a Java 24 base image
+        image = "openjdk:23-jdk-slim"
     }
     to {
         image = "docker.io/thebestpessimist/duplicacy-utils-telegram-bot"
