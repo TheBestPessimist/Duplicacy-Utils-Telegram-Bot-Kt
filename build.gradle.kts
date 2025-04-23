@@ -1,8 +1,8 @@
-val javaVersion = JavaVersion.VERSION_24
-val kotlinLanguageVersion = "2.1" // Updated Kotlin language version
-val ktorVersion = "3.1.2" // Updated Ktor version
-val jacksonVersion = "2.18.3" // Updated Jackson version
-val logbackVersion = "1.5.18" // Updated Logback version
+val javaVersion = JavaVersion.VERSION_23
+val kotlinLanguageVersion = "2.1"
+val ktorVersion = "3.1.2"
+val jacksonVersion = "2.18.3"
+val logbackVersion = "1.5.18"
 
 val applicationJvmArgs = listOf(
     "-server",
@@ -10,12 +10,11 @@ val applicationJvmArgs = listOf(
     "-XX:+UseStringDeduplication",
     "-Xms40m",
     "-Xmx40m"
-    // Finalization is disabled by default since Java 18
 )
 
 
 group = "land.tbp"
-version = "1.6"
+version = "1.7"
 description = "Telegram Bot used for my Duplicacy Utils scripts"
 java.sourceCompatibility = javaVersion
 java.targetCompatibility = javaVersion
@@ -24,8 +23,8 @@ java.targetCompatibility = javaVersion
 
 plugins {
     application
-    kotlin("jvm") version "1.6.20"
-    id("com.google.cloud.tools.jib") version "3.2.0"
+    kotlin("jvm") version "2.1.20"
+    id("com.google.cloud.tools.jib") version "3.4.5"
 }
 
 
@@ -90,7 +89,7 @@ tasks {
 
 jib {
     from {
-        image = "openjdk:24-jdk-slim" // Use a Java 24 base image
+        image = "openjdk:23-jdk-slim" // Use a Java 24 base image
     }
     to {
         image = "docker.io/thebestpessimist/duplicacy-utils-telegram-bot"
