@@ -4,7 +4,7 @@ import io.ktor.serialization.jackson.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
-import io.ktor.server.plugins.callloging.*
+import io.ktor.server.plugins.calllogging.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.routing.*
 import org.slf4j.event.Level
@@ -22,7 +22,7 @@ val telegram = Telegram(
 )
 
 fun main() {
-    val embeddedServer: NettyApplicationEngine = embeddedServer(Netty, 13337) {
+    val embeddedServer = embeddedServer(Netty, 13337) {
         telegram.initializeTelegramClient(this)
 
         install(ContentNegotiation) {
