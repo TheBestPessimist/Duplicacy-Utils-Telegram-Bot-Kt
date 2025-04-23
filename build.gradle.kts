@@ -3,7 +3,6 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 val javaVersion = JavaVersion.VERSION_23
 val kotlinLanguageVersion = "2.1"
-val ktorVersion = "3.1.2"
 val jacksonVersion = "2.18.3"
 val logbackVersion = "1.5.18"
 
@@ -28,6 +27,7 @@ plugins {
     application
     kotlin("jvm") version "2.1.20"
     id("com.google.cloud.tools.jib") version "3.4.5"
+    id("io.ktor.plugin") version "3.1.1"
 }
 
 
@@ -41,25 +41,21 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
 
     // ktor server
-    implementation("io.ktor:ktor-server-netty-jvm:$ktorVersion")
-    implementation("io.ktor:ktor-server-host-common:$ktorVersion")
-    implementation("io.ktor:ktor-server-core-jvm:$ktorVersion")
-    implementation("io.ktor:ktor-server-metrics-jvm:$ktorVersion")
-    implementation("io.ktor:ktor-server-call-logging-jvm:$ktorVersion")
-    implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
+    implementation("io.ktor:ktor-server-netty-jvm")
+    implementation("io.ktor:ktor-server-host-common")
+    implementation("io.ktor:ktor-server-core-jvm")
+    implementation("io.ktor:ktor-server-metrics-jvm")
+    implementation("io.ktor:ktor-server-call-logging-jvm")
+    implementation("io.ktor:ktor-server-content-negotiation")
 
     // ktor client
-    implementation("io.ktor:ktor-client-core:$ktorVersion")
-    implementation("io.ktor:ktor-client-apache:$ktorVersion")
-    implementation("io.ktor:ktor-client-logging:$ktorVersion")
-    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+    implementation("io.ktor:ktor-client-core")
+    implementation("io.ktor:ktor-client-apache")
+    implementation("io.ktor:ktor-client-logging")
+    implementation("io.ktor:ktor-client-content-negotiation")
 
     // ktor common
-    implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
-
-
-
-    testImplementation("io.ktor:ktor-server-tests-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-serialization-jackson")
 
     configurations.all {
         exclude(group = "junit", module = "junit")
